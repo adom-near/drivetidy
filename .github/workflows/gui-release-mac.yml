@@ -1,0 +1,42 @@
+name: gui-release-mac
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[gui]"
+          pip install pyinstaller
+
+      - name: Build binary with PyInstaller
+        run: pyinstaller --clean --noconfirm drivetidy.spec
+
+      - name: Package as zip
+        run: |
+          cd dist
+          chmod +x drivetidy
+          cp ../start.command .
+          chmod +x start.command
+          zip -r drivetidy-macos-arm64.zip drivetidy start.command
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/drivetidy-macos-arm64.zip
+          generate_release_notes: true

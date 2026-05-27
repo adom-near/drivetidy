@@ -39,8 +39,8 @@ apt install fd-find    # Debian/Ubuntu
 
 Download the latest release for your platform from the [Releases page](https://github.com/wt/drivetidy/releases):
 
-- **macOS**: `DriveTidy-mac.dmg` — *on first launch, right-click → Open* (the app is unsigned; this bypasses Gatekeeper)
-- **Windows**: `DriveTidy-win.zip`
+- **macOS**: `drivetidy-macos-arm64.zip` — unzip, then double-click `start.command`. *First launch: right-click → Open* to bypass Gatekeeper (the app is unsigned).
+- **Windows**: `drivetidy-windows-x64.zip` — unzip, then double-click `drivetidy.exe`. SmartScreen may warn; click "More info" → "Run anyway".
 
 ## Quick start
 
@@ -111,8 +111,8 @@ brew install fd        # macOS
 
 到 [Releases 頁面](https://github.com/wt/drivetidy/releases) 下載：
 
-- **macOS**：`DriveTidy-mac.dmg` — *第一次打開要「右鍵 → 打開」*（App 沒簽章，這樣可以繞過 Gatekeeper）
-- **Windows**：`DriveTidy-win.zip`
+- **macOS**：`drivetidy-macos-arm64.zip` — 解壓後雙擊 `start.command`。*第一次打開要「右鍵 → 打開」* 才能繞過 Gatekeeper（App 沒簽章）
+- **Windows**：`drivetidy-windows-x64.zip` — 解壓後雙擊 `drivetidy.exe`。SmartScreen 可能會跳警告，點「其他資訊」→「仍要執行」
 
 ### 快速上手
 

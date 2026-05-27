@@ -20,7 +20,7 @@ from . import config, db as dbmod
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="drivetidy",
-        description="Post-ingest disk organizer: cross-drive dedup and safe cleanup",
+        description="Backup integrity audit: verify your photos and videos are actually backed up",
     )
     p.add_argument("--db", help="Path to SQLite db (default: ~/.drivetidy/drivetidy.db)")
     p.add_argument("--rclone", help="Path to rclone binary (default: auto-detect)")
@@ -65,16 +65,6 @@ def build_parser() -> argparse.ArgumentParser:
         "--resume", action=argparse.BooleanOptionalAction, default=True,
         help="Skip files already in hashes table; use --no-resume to rehash all",
     )
-
-    # dedup
-    s_dd = sub.add_parser("dedup", help="Find cross-drive / intra-drive duplicates")
-    s_dd.add_argument("label_a")
-    s_dd.add_argument("label_b", nargs="?", help="Omit for intra-drive dedup")
-    s_dd.add_argument(
-        "--keep", choices=["A", "B"], default="B",
-        help="Keep files on the named drive; mark the other side's duplicates as deletable",
-    )
-    s_dd.add_argument("--min-size", default="100K")
 
     # audit (Phase 2 — primary feature)
     s_aud = sub.add_parser(
@@ -139,24 +129,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="(reserved) Write HTML report to PATH; A4 will implement",
     )
 
-    # report
-    s_rep = sub.add_parser("report", help="Produce HTML report for a dedup run")
-    s_rep.add_argument("run_id", type=int)
-    s_rep.add_argument("--out", default="report.html")
-    s_rep.add_argument("--format", choices=["folder", "flat"], default="folder")
-
-    # apply (dangerous -> dry-run by default)
-    s_app = sub.add_parser("apply", help="Apply a selections JSON (moves to Trash by default)")
-    s_app.add_argument("selections_json")
-    s_app.add_argument(
-        "--apply", action="store_true",
-        help="Actually perform the deletion. Without this, runs dry-run.",
-    )
-    s_app.add_argument(
-        "--mode", choices=["trash", "rm"], default="trash",
-        help="trash = send to Trash (reversible); rm = permanently delete",
-    )
-
     # backup-missing — close the audit loop. Copies an audit's missing
     # list from source to dest using rsync. Strictly additive, dry-run
     # by default; --apply gates the actual rsync call.
@@ -175,11 +147,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="Actually run rsync. Without this, prints the plan only.",
     )
 
-    # promote
-    s_pr = sub.add_parser("promote", help="Upgrade tentative dedup pairs to certain via full-file rehash")
-    s_pr.add_argument("run_id", type=int)
-    s_pr.add_argument("--from", dest="src_confidence", default="tentative")
-
     # gui
     s_gui = sub.add_parser("gui", help="Launch the local web GUI (browser-based)")
     s_gui.add_argument("--host", default="127.0.0.1")
@@ -190,11 +157,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     # status
-    sub.add_parser("status", help="List scans and dedup runs in the db")
-
-    # bench
-    s_bench = sub.add_parser("bench", help="Benchmark hash throughput on a directory")
-    s_bench.add_argument("path")
+    sub.add_parser("status", help="List scans in the db")
 
     # db
     s_db = sub.add_parser("db", help="Database inspection commands")
@@ -209,7 +172,7 @@ def _resolve_db_path(args: argparse.Namespace):
 
 
 def cmd_status(args: argparse.Namespace) -> int:
-    """List scans and dedup runs in the configured db."""
+    """List scans and audit runs in the configured db."""
     path = _resolve_db_path(args)
     conn = dbmod.get_conn(path)
     try:
@@ -257,29 +220,6 @@ def cmd_status(args: argparse.Namespace) -> int:
                     f"  #{a['id']:<3} {a['source_ident']:<20} → {dest_summary:<30} "
                     f"matched={a['matched_count']:>6}/{a['total_files']:<6} "
                     f"({pct:5.1f}%) missing={a['missing_count']:<5} {a['ran_at']}"
-                )
-
-        runs = conn.execute(
-            "SELECT dr.id, dr.scan_a, dr.scan_b, dr.policy, dr.min_size, dr.algo, "
-            "dr.sample_size, dr.created_at, "
-            "sa.label AS label_a, sb.label AS label_b, "
-            "(SELECT COUNT(*) FROM dedup_pairs dp WHERE dp.run_id = dr.id) AS pair_count "
-            "FROM dedup_runs dr "
-            "JOIN scans sa ON sa.id = dr.scan_a "
-            "LEFT JOIN scans sb ON sb.id = dr.scan_b "
-            "ORDER BY dr.created_at DESC"
-        ).fetchall()
-        print(f"\nDedup runs ({len(runs)}):")
-        if not runs:
-            print("  (none)")
-        else:
-            for r in runs:
-                sample = f"sample={r['sample_size']}" if r["sample_size"] else "full"
-                b_label = r["label_b"] or "(intra)"
-                print(
-                    f"  #{r['id']:<3} {r['label_a']} vs {b_label:<20} "
-                    f"algo={r['algo']:<6} {sample:<12} pairs={r['pair_count']:>6}  "
-                    f"{r['created_at']}"
                 )
     finally:
         conn.close()
