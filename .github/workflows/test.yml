@@ -22,13 +22,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install fd (Ubuntu)
+      - name: Install fd + rclone (Ubuntu)
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y fd-find && sudo ln -s "$(which fdfind)" /usr/local/bin/fd
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fd-find rclone
+          sudo ln -s "$(which fdfind)" /usr/local/bin/fd
 
-      - name: Install fd (macOS)
+      - name: Install fd + rclone (macOS)
         if: runner.os == 'macOS'
-        run: brew install fd
+        run: brew install fd rclone
 
       - name: Install package
         run: |
