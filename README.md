@@ -37,7 +37,7 @@ apt install fd-find    # Debian/Ubuntu
 
 ### GUI (everyone else)
 
-Download the latest release for your platform from the [Releases page](https://github.com/wt/drivetidy/releases):
+Download the latest release for your platform from the [Releases page](https://github.com/adom-near/drivetidy/releases):
 
 - **macOS**: `drivetidy-macos-arm64.zip` — unzip, then double-click `start.command`. *First launch: right-click → Open* to bypass Gatekeeper (the app is unsigned).
 - **Windows**: `drivetidy-windows-x64.zip` — unzip, then double-click `drivetidy.exe`. SmartScreen may warn; click "More info" → "Run anyway".
@@ -51,13 +51,11 @@ drivetidy scan /Volumes/Backup-1 --label backup-1
 drivetidy scan /Volumes/Backup-2 --label backup-2
 
 # 2. Audit — is everything on sd-source covered by the backups?
-drivetidy audit sd-source --against backup-1,backup-2
+#    Pass --out to also write an HTML report grouping missing files by folder.
+drivetidy audit sd-source --against backup-1,backup-2 --out missing.html
 
-# 3. Generate an HTML report of missing files
-drivetidy report <run_id> -o missing.html
-
-# 4. (Optional) Copy missing files to a backup
-drivetidy backup-missing <run_id> --dest-ident backup-1 --apply
+# 3. (Optional) Copy missing files to a backup — additive, never deletes
+drivetidy backup-missing <audit_run_id> --dest-ident backup-1 --apply
 ```
 
 ## License
@@ -109,7 +107,7 @@ brew install fd        # macOS
 
 #### GUI（視窗版）
 
-到 [Releases 頁面](https://github.com/wt/drivetidy/releases) 下載：
+到 [Releases 頁面](https://github.com/adom-near/drivetidy/releases) 下載：
 
 - **macOS**：`drivetidy-macos-arm64.zip` — 解壓後雙擊 `start.command`。*第一次打開要「右鍵 → 打開」* 才能繞過 Gatekeeper（App 沒簽章）
 - **Windows**：`drivetidy-windows-x64.zip` — 解壓後雙擊 `drivetidy.exe`。SmartScreen 可能會跳警告，點「其他資訊」→「仍要執行」
@@ -123,13 +121,11 @@ drivetidy scan /Volumes/備份-1 --label backup-1
 drivetidy scan /Volumes/備份-2 --label backup-2
 
 # 2. 比對 — sd-source 的東西兩顆備份是否全包到？
-drivetidy audit sd-source --against backup-1,backup-2
+#    加 --out 可同時產出缺檔 HTML 報告（按來源資料夾分組）
+drivetidy audit sd-source --against backup-1,backup-2 --out 缺檔報告.html
 
-# 3. 產生缺檔 HTML 報告
-drivetidy report <run_id> -o 缺檔報告.html
-
-# 4. （選用）把缺的檔複製到某顆備份
-drivetidy backup-missing <run_id> --dest-ident backup-1 --apply
+# 3. （選用）把缺的檔複製到某顆備份（只新增不刪除）
+drivetidy backup-missing <audit_run_id> --dest-ident backup-1 --apply
 ```
 
 ### 授權

@@ -22,7 +22,7 @@ By submitting a PR, you agree to license your contribution under GPL-3.0-or-late
 ## Development setup
 
 ```bash
-git clone https://github.com/wt/drivetidy.git
+git clone https://github.com/adom-near/drivetidy.git
 cd drivetidy
 python3 -m venv .venv
 source .venv/bin/activate
