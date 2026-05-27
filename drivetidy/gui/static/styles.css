@@ -1,0 +1,130 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, "PingFang TC", "Helvetica Neue", sans-serif;
+  margin: 0; padding: 0; background: #fafafa; color: #333;
+}
+header { background: #d35400; color: white; padding: 1em 2em; display: flex; align-items: baseline; gap: 1em; }
+header h1 { margin: 0; font-size: 1.4em; }
+header .tagline { font-size: 0.9em; opacity: 0.9; }
+main { display: grid; grid-template-columns: 320px 1fr; gap: 1.5em; padding: 1.5em; max-width: 1200px; margin: 0 auto; }
+.panel { background: white; border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.panel header { background: none; color: #333; padding: 0 0 0.5em 0; border-bottom: 1px solid #eee; margin-bottom: 0.8em; display: flex; justify-content: space-between; align-items: center; }
+.panel header h2 { margin: 0; font-size: 1.05em; color: #d35400; }
+.panel h3 { font-size: 0.95em; color: #666; margin: 1em 0 0.4em; }
+.panel ul { list-style: none; padding: 0; margin: 0; }
+.panel li { padding: 6px 4px; border-bottom: 1px solid #f0f0f0; font-size: 0.9em; }
+.panel li.placeholder { color: #aaa; font-style: italic; }
+.drive-name { font-weight: 600; }
+.drive-meta { color: #888; font-size: 0.82em; padding-left: 0.5em; }
+.drive-row { display: flex; justify-content: space-between; align-items: center; gap: 0.5em; }
+.drive-meta-wrap { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.drive-meta-wrap .drive-name,
+.drive-meta-wrap .drive-meta { display: block; padding-left: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.drive-actions { display: flex; gap: 0.3em; flex-shrink: 0; }
+.drive-action-btn {
+  padding: 3px 8px; font-size: 0.78em; background: transparent;
+  color: #d35400; border: 1px solid #ffcc99; border-radius: 4px;
+  white-space: nowrap;
+}
+.drive-action-btn:hover { background: #fff3e0; border-color: #d35400; }
+.label-row { display: flex; justify-content: space-between; }
+.label-name { font-weight: 600; color: #1565c0; }
+.label-meta { color: #888; font-size: 0.82em; }
+
+button { padding: 6px 14px; border: none; border-radius: 4px; background: #e67e22; color: white; cursor: pointer; font-size: 0.9em; }
+button:hover { background: #d35400; }
+button:disabled { background: #aaa; cursor: not-allowed; }
+#refresh-drives { padding: 4px 8px; background: transparent; color: #888; }
+#refresh-drives:hover { color: #d35400; background: transparent; }
+
+.input-with-pick { display: flex; gap: 0.4em; align-items: stretch; }
+.input-with-pick input { flex: 1; min-width: 0; }
+.pick-btn {
+  padding: 4px 10px; font-size: 0.85em; white-space: nowrap;
+  background: transparent; color: #d35400; border: 1px solid #ffcc99;
+  border-radius: 4px; cursor: pointer; flex-shrink: 0;
+}
+.pick-btn:hover { background: #fff3e0; border-color: #d35400; }
+.pick-btn:disabled { opacity: 0.5; cursor: wait; }
+form .row { display: flex; flex-direction: column; gap: 0.3em; margin-bottom: 0.8em; }
+form .row.inline { flex-direction: row; align-items: center; gap: 1.5em; }
+form .row span { font-size: 0.85em; color: #666; }
+form input[type=text] { padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95em; }
+form input[type=checkbox] { margin-right: 4px; }
+.status { padding-left: 1em; color: #666; font-size: 0.85em; }
+.status.error { color: #c0392b; }
+.status.success { color: #2e7d32; }
+
+.result { margin-top: 1.5em; }
+.result.hidden { display: none; }
+.big-stat-row { display: flex; gap: 1em; margin-bottom: 1em; }
+.big-stat { flex: 1; padding: 0.8em; background: #f8f8f8; border-radius: 6px; text-align: center; }
+.big-stat .num { display: block; font-size: 1.6em; font-weight: bold; color: #4caf50; }
+.big-stat.warn .num { color: #c0392b; }
+.big-stat .label { font-size: 0.82em; color: #888; }
+.bar { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; margin: 0.5em 0 1em; }
+.bar-fill { height: 100%; background: linear-gradient(90deg, #4caf50, #66bb6a); width: 0; transition: width 0.4s; }
+
+#audit-per-dest li { display: flex; justify-content: space-between; }
+#audit-missing-list details { background: #fff8e1; border: 1px solid #ffe0b2; border-radius: 4px; margin-bottom: 0.4em; padding: 0.3em 0.6em; }
+#audit-missing-list summary { cursor: pointer; font-weight: 600; }
+#audit-missing-list ul { padding-left: 1.5em; font-family: Menlo, monospace; font-size: 0.82em; }
+#audit-missing-list li { padding: 2px 0; border: none; display: flex; justify-content: space-between; }
+.match-warn { color: #c0392b; font-size: 0.78em; font-weight: normal; }
+.match-help { font-size: 0.85em; color: #666; line-height: 1.5; background: #fff8e1; padding: 0.5em 0.8em; border-radius: 4px; border-left: 3px solid #d35400; margin: 0 0 0.6em; }
+#audit-matched-list details { background: #f0f7ff; border: 1px solid #c5dffb; border-radius: 4px; margin-bottom: 0.4em; padding: 0.3em 0.6em; }
+#audit-matched-list summary { cursor: pointer; font-weight: 600; color: #1565c0; }
+#audit-matched-list ul { padding-left: 1.2em; font-family: Menlo, monospace; font-size: 0.82em; list-style: none; }
+#audit-matched-list li { padding: 4px 0; border: none; display: block; }
+.match-src { font-weight: 600; color: #333; word-break: break-all; }
+.match-hit { color: #555; padding-left: 1em; word-break: break-all; }
+.match-ident { color: #1565c0; }
+.size { color: #888; padding-left: 1em; }
+
+footer { text-align: center; color: #aaa; font-size: 0.8em; padding: 1em; }
+footer a { color: #d35400; text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+body.read-only #audit-form input,
+body.read-only #audit-form button[type=submit] { opacity: 0.5; pointer-events: none; }
+body.read-only::before { content: "唯讀模式（試用已結束，僅可瀏覽歷史）"; display: block; background: #fff3e0; color: #b34800; text-align: center; padding: 0.4em; font-size: 0.85em; border-bottom: 1px solid #ffe0b2; }
+
+/* EXIF evidence panel — surfaces match-quality without ever changing
+ * the matched/missing counts. Colours track the existing palette:
+ * orange (success/strong), grey (neutral/weak), red (warning/conflict).
+ */
+.evidence-block { background: #fff8ee; border: 1px solid #ffe0b2; border-radius: 8px; padding: 0.8em 1em; margin: 1em 0; }
+.evidence-block.hidden { display: none; }
+.evidence-block h3 { margin-top: 0; }
+.evidence-counts { list-style: none; padding: 0; margin: 0.4em 0 0; display: flex; flex-wrap: wrap; gap: 0.6em; }
+.evidence-counts li { padding: 0.3em 0.7em; border-radius: 4px; font-size: 0.92em; background: #f0f0f0; }
+.evidence-counts li .num { font-weight: 600; margin-right: 0.3em; }
+.evidence-counts li.ev-strong { background: #e8f5e9; color: #1b5e20; }
+.evidence-counts li.ev-weak { background: #f5f5f5; color: #666; }
+.evidence-counts li.ev-conflict { background: #ffebee; color: #b71c1c; }
+
+#audit-matched-list li.ev-conflict { background: #fff5f5; border-left: 3px solid #e53935; padding-left: 0.5em; }
+#audit-matched-list li.ev-strong { border-left: 3px solid #43a047; padding-left: 0.5em; }
+
+.ev-badge { display: inline-block; font-size: 0.78em; padding: 1px 6px; border-radius: 3px; margin-left: 0.4em; vertical-align: middle; }
+.ev-strong-badge { background: #e8f5e9; color: #1b5e20; }
+.ev-conflict-badge { background: #ffebee; color: #b71c1c; }
+
+/* Backup-missing block — sits below audit's missing list. Reuses the
+ * existing orange palette; "primary" button matches modal-card buttons.
+ */
+.backup-block { background: #fff8ee; border: 1px solid #ffe0b2; border-radius: 8px; padding: 0.8em 1em; margin: 1em 0; }
+.backup-block.hidden { display: none; }
+.backup-block h3 { margin-top: 0; }
+.backup-block .row { display: flex; gap: 0.6em; align-items: center; flex-wrap: wrap; margin-top: 0.6em; }
+.backup-block .row label { display: flex; align-items: center; gap: 0.3em; font-size: 0.92em; }
+.backup-block #backup-dest-ident { padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; }
+.backup-block .btn.primary { padding: 6px 14px; border-radius: 5px; background: #d35400; color: white; border: none; cursor: pointer; font-size: 0.9em; }
+.backup-block .btn.primary:hover:not(:disabled) { background: #b34800; }
+.backup-block .btn.primary:disabled { background: #ccc; cursor: not-allowed; }
+.backup-block .status { font-size: 0.9em; color: #666; }
+.backup-block .status.success { color: #2e7d32; }
+.backup-block .status.error { color: #c62828; }
+.backup-block #backup-result { margin-top: 0.6em; font-size: 0.92em; }
+.backup-block #backup-failed-list li { color: #b71c1c; font-size: 0.85em; }

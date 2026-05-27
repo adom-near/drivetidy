@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DriveTidy</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<header>
+  <h1>DriveTidy</h1>
+  <span class="tagline">備份完整性稽核</span>
+</header>
+
+<main>
+  <section class="panel drives-panel">
+    <header><h2>掛載中的硬碟</h2><button id="refresh-drives">🔄</button></header>
+    <ul id="drives-list"><li class="placeholder">載入中…</li></ul>
+
+    <h3>已建檔的標籤</h3>
+    <ul id="labels-list"><li class="placeholder">載入中…</li></ul>
+  </section>
+
+  <section class="panel audit-panel">
+    <header><h2>備份稽核</h2></header>
+
+    <form id="audit-form">
+      <label class="row">
+        <span>來源</span>
+        <div class="input-with-pick">
+          <input type="text" id="audit-source" placeholder="記憶卡 / 資料夾路徑或已建檔的 label">
+          <button type="button" class="pick-btn" id="pick-source" title="叫出資料夾選擇器">📂 選資料夾</button>
+        </div>
+      </label>
+
+      <label class="row">
+        <span>比對目的地</span>
+        <div class="input-with-pick">
+          <input type="text" id="audit-against" placeholder="逗號分隔，例如 seagate 或 /Volumes/seagate/Photos">
+          <button type="button" class="pick-btn" id="pick-against" title="叫出資料夾選擇器加進比對清單">📂 加資料夾</button>
+        </div>
+      </label>
+
+      <div class="row inline">
+        <label>最小檔案大小
+          <input type="text" id="audit-min-size" value="1M" size="6">
+        </label>
+        <label>
+          <input type="checkbox" id="audit-early-stop" checked> 早停
+        </label>
+      </div>
+
+      <button type="submit" id="audit-run-btn">開始稽核</button>
+      <span id="audit-status" class="status"></span>
+    </form>
+
+    <div id="audit-result" class="result hidden">
+      <div class="big-stat-row">
+        <div class="big-stat"><span class="num" id="audit-pct">--</span><span class="label">已備份</span></div>
+        <div class="big-stat"><span class="num" id="audit-matched">--</span><span class="label">matched</span></div>
+        <div class="big-stat warn"><span class="num" id="audit-missing">--</span><span class="label">missing</span></div>
+      </div>
+
+      <div class="bar"><div class="bar-fill" id="audit-bar"></div></div>
+
+      <div id="audit-evidence" class="evidence-block hidden">
+        <h3>EXIF 訊號</h3>
+        <p class="match-help">
+          相機資訊（拍攝時間、相機型號）跟 size + 檔名一起比對的結果。
+          <strong>「conflict」是要請你手動確認</strong>的 — 兩邊都有 EXIF 但對不起來，
+          可能是不同相機湊巧同檔名同 size，請展開「已備份檔案的目的地對應」看那幾筆。
+        </p>
+        <ul class="evidence-counts">
+          <li class="ev-strong"><span class="num" id="evidence-strong">0</span> strong（兩邊 EXIF 對得上）</li>
+          <li class="ev-weak"><span class="num" id="evidence-weak">0</span> weak（沒 EXIF 或資訊不夠）</li>
+          <li class="ev-conflict"><span class="num" id="evidence-conflict">0</span> conflict（請手動確認）</li>
+        </ul>
+      </div>
+
+      <h3>各目的地命中</h3>
+      <ul id="audit-per-dest"></ul>
+
+      <h3>未備份檔案（按來源資料夾）</h3>
+      <div id="audit-missing-list"></div>
+
+      <div id="backup-missing-block" class="backup-block hidden">
+        <h3>📦 一鍵備份未備份檔案</h3>
+        <p class="match-help">
+          把上面這 <span id="backup-count">--</span> 個未備份的檔案
+          （<span id="backup-bytes">--</span>）從來源複製到目的地。
+          <strong>只寫不刪</strong>：這個動作只會在目的地新增檔案，<strong>不會動到</strong>來源 SD 卡 / 硬碟。
+        </p>
+        <div class="row">
+          <label>複製到：
+            <select id="backup-dest-ident"></select>
+          </label>
+          <button type="button" class="btn primary" id="backup-run-btn">📦 開始複製</button>
+          <span id="backup-status" class="status"></span>
+        </div>
+        <div id="backup-result" class="hidden">
+          <p id="backup-result-summary"></p>
+          <details id="backup-failed-details" class="hidden">
+            <summary>失敗清單</summary>
+            <ul id="backup-failed-list"></ul>
+          </details>
+        </div>
+      </div>
+
+      <h3>已備份檔案的目的地對應 <span class="match-warn">（請肉眼驗證）</span></h3>
+      <p class="match-help">
+        匹配條件是「檔名 + 檔案大小」，<strong>不看完整路徑也不算 hash</strong>。
+        相機連號 (DSC_0001、IMG_0412 …) 配上同 size 的影片片段，可能讓不同 shoot 的檔被誤判同一個。
+        展開下面看到「目的地對到的位置」與你預期不一致 → 那個檔其實沒備份。
+      </p>
+      <div id="audit-matched-list"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span id="version">v1.0.0</span> ·
+  <a href="https://github.com/wt/drivetidy" target="_blank" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

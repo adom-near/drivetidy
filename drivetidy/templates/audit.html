@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>{title}</title>
+<style>
+  body {{
+    font-family: -apple-system, "PingFang TC", "Helvetica Neue", sans-serif;
+    max-width: 960px;
+    margin: 2em auto;
+    padding: 0 1em;
+    color: #333;
+    background: #fafafa;
+  }}
+  h1 {{
+    color: #d35400;
+    border-bottom: 3px solid #e67e22;
+    padding-bottom: 0.3em;
+    margin-bottom: 0.2em;
+  }}
+  .subtitle {{ color: #888; font-size: 0.9em; margin-bottom: 1em; }}
+  .summary {{
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1em 1.2em;
+    margin: 1em 0;
+  }}
+  .summary.ok {{ border-left: 5px solid #4caf50; }}
+  .summary.warn {{ border-left: 5px solid #f39c12; }}
+  .stat-row {{ display: flex; gap: 2em; flex-wrap: wrap; margin-top: 0.5em; }}
+  .stat {{ flex: 1; min-width: 150px; }}
+  .stat-num {{ font-size: 1.6em; font-weight: bold; }}
+  .stat-num.matched {{ color: #4caf50; }}
+  .stat-num.missing {{ color: #c0392b; }}
+  .pct-bar {{
+    height: 12px;
+    background: #eee;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 0.5em;
+  }}
+  .pct-fill {{
+    height: 100%;
+    background: linear-gradient(90deg, #4caf50, #66bb6a);
+    width: {pct}%;
+    transition: width 0.3s;
+  }}
+  table {{
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    background: white;
+  }}
+  th, td {{ padding: 8px 12px; text-align: left; border: 1px solid #ddd; }}
+  th {{ background: #f4a261; color: white; }}
+  td.num {{ text-align: right; font-variant-numeric: tabular-nums; }}
+  .kind-label, .kind-path {{
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    font-weight: 600;
+  }}
+  .kind-label {{ background: #e3f2fd; color: #1565c0; }}
+  .kind-path {{ background: #fff3e0; color: #ef6c00; }}
+  details {{
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    margin: 0.5em 0;
+    padding: 0.5em 0.8em;
+  }}
+  details summary {{ cursor: pointer; padding: 0.4em 0; }}
+  details summary:hover {{ color: #d35400; }}
+  .file-list {{
+    list-style: none;
+    padding-left: 1.5em;
+    margin: 0.5em 0;
+    font-family: Menlo, Monaco, monospace;
+    font-size: 0.85em;
+  }}
+  .file-list li {{ padding: 2px 0; display: flex; justify-content: space-between; }}
+  .path {{ color: #555; word-break: break-all; }}
+  .size {{ color: #888; font-size: 0.85em; padding-left: 1em; white-space: nowrap; }}
+  .count {{ color: #888; font-size: 0.85em; padding-left: 0.5em; }}
+  .all-good {{
+    background: #e8f5e9;
+    border-left: 5px solid #4caf50;
+    padding: 1em;
+    border-radius: 6px;
+    color: #2e7d32;
+    font-size: 1.1em;
+  }}
+  .method-note {{
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    border-radius: 6px;
+    margin: 1em 0;
+    font-size: 0.92em;
+    color: #5d4037;
+  }}
+  .method-note strong {{ color: #bf360c; }}
+  .method-note .tip {{ color: #6d4c41; }}
+  footer {{ color: #aaa; font-size: 0.8em; margin-top: 2em; text-align: center; }}
+  .json-box {{ display: none; }}
+</style>
+</head>
+<body>
+
+<h1>備份稽核：{source_ident}</h1>
+<p class="subtitle">
+  來源 <span class="kind-{source_kind_badge}">{source_kind_label}</span>
+  → 比對 {dest_summary}
+  · 產出時間 {generated_at}
+</p>
+
+<div class="summary {pct_int}">
+  <div class="stat-row">
+    <div class="stat">
+      <div class="stat-num">{total_files}</div>
+      <div>來源檔案 ({total_bytes_human})</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num matched">{matched}</div>
+      <div>已備份 ({pct}%)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num missing">{missing}</div>
+      <div>未備份 ({missing_bytes_human})</div>
+    </div>
+  </div>
+  <div class="pct-bar"><div class="pct-fill"></div></div>
+</div>
+
+<div class="method-note">
+  <strong>⚠ 比對方式說明</strong>：本報告以 {match_method_zh} 判斷檔案是否已備份。
+  <span class="tip">對重要素材（拍攝原檔、不可重來的素材）建議在格式化或刪除來源之前，
+  自行打開幾個「已備份」檔案肉眼確認內容無誤；不同檔但檔名+大小相同的碰撞情境（如相機序號歸零）
+  雖罕見但會發生。</span>
+</div>
+
+<h2>各備份目的地命中數</h2>
+<table>
+  <tr><th>備份目的地</th><th>類型</th><th>命中檔數</th></tr>
+{per_dest_html}
+</table>
+
+<h2>未備份檔案（按來源資料夾分組）</h2>
+{folders_html}
+
+<footer>
+  drivetidy audit · {generated_at}
+</footer>
+
+<script id="audit-result" type="application/json" class="json-box">{result_json}</script>
+</body>
+</html>
