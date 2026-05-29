@@ -14,9 +14,19 @@ import pytest
 
 
 def pytest_configure(config):
-    tmp_dir = Path(tempfile.gettempdir())
+    # The scan allowlist matches by string prefix without resolving symlinks.
+    # macOS pytest puts tmp_path under /var/folders/... but the path may be
+    # handed to the app in its /private/var/folders/... resolved form (or vice
+    # versa), so include both. Same for the basetemp pytest actually uses.
+    candidates = ["/tmp", "/private/tmp"]
+    tmp_dir = tempfile.gettempdir()
+    candidates += [tmp_dir, os.path.realpath(tmp_dir)]
+    basetemp = getattr(config.option, "basetemp", None)
+    if basetemp:
+        candidates += [str(basetemp), os.path.realpath(str(basetemp))]
+    roots = ":".join(dict.fromkeys(c for c in candidates if c))
     if "DRIVETIDY_SCAN_EXTRA_ROOTS" not in os.environ:
-        os.environ["DRIVETIDY_SCAN_EXTRA_ROOTS"] = "/tmp:/private/tmp:" + str(tmp_dir)
+        os.environ["DRIVETIDY_SCAN_EXTRA_ROOTS"] = roots
 
 
 def _has_backend() -> bool:
