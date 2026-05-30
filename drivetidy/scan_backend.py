@@ -12,7 +12,7 @@ Paths are relative to the given root, NFC-normalized for JOINs;
 `rel_path_raw` preserves whatever bytes the OS returned (for actual
 filesystem operations later — only differs on HFS+/NFD volumes).
 
-Per internal notes §2.3 / §3.1:
+Concurrency policy (see drive_info.recommended_parallelism):
   - HDD → single worker (fd: -j 1) to avoid head thrash
   - SSD → default parallelism (fd uses CPU count)
 

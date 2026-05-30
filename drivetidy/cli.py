@@ -3,10 +3,10 @@
 
 """CLI entry point for drivetidy.
 
-Subcommands defined in internal notes §B. This file only handles argparse dispatch;
-each subcommand's logic lives in its own module.
+This file only handles argparse dispatch; each subcommand's logic lives
+in its own module.
 
-SAFETY: any subcommand that mutates files (apply, delete) defaults to dry-run.
+SAFETY: any subcommand that mutates files defaults to dry-run.
 """
 
 from __future__ import annotations

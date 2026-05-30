@@ -1,6 +1,7 @@
 #!/bin/bash
-# DriveTidy launcher — 雙擊我啟動 GUI
 # SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 wt and DriveTidy contributors
+# DriveTidy launcher — 雙擊我啟動 GUI
 set -e
 
 cd "$(dirname "$0")"

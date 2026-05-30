@@ -1,6 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
-# PyInstaller spec for the DriveTidy single-file binary used in the
-# "DriveTidy" internal distribution.
+# SPDX-License-Identifier: GPL-3.0-or-later
+# PyInstaller spec for the DriveTidy single-file binary.
 #
 # Usage:
 #   pyinstaller --clean --noconfirm drivetidy.spec

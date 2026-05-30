@@ -3,11 +3,11 @@
 
 """Drive-type detection: HDD vs SSD.
 
-Per internal notes §2.3 / §3.1 the policy is:
+Workload policy:
   - HDD: single-threaded sequential reads (avoid head-thrash)
   - SSD: parallel workers OK (often faster)
 
-Detection strategy (internal notes review #1 + internal notes §F):
+Detection strategy:
   1. Try `system_profiler SPStorageDataType -json` (stable JSON on macOS).
      Walk the tree looking for the mount point; inspect the backing
      device's 'SolidState' / 'Solid State' fields.
@@ -202,5 +202,5 @@ def is_ssd(mount_path: str) -> bool:
 
 
 def recommended_parallelism(drive_type: DriveType, ssd_workers: int = 8) -> int:
-    """Per internal notes: HDD/UNKNOWN → 1, SSD → ssd_workers."""
+    """HDD/UNKNOWN → 1 (avoid head-thrash); SSD → ssd_workers."""
     return ssd_workers if drive_type is DriveType.SSD else 1

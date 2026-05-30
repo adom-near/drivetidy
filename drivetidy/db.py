@@ -3,7 +3,7 @@
 
 """SQLite schema and connection helpers.
 
-PRAGMA tuning per internal notes §4:
+PRAGMA tuning rationale:
   - journal_mode=WAL           (concurrent reader during writes)
   - synchronous=NORMAL         (2-3x faster writes; acceptable since scans are
                                 re-runnable if we lose the last transaction)

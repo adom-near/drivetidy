@@ -756,8 +756,8 @@ def test_audit_cli_report_surfaces_conflict_summary(db_path, tmp_path):
 
 def test_audit_cli_report_no_evidence_block_when_all_weak(db_path, tmp_path):
     """Legacy users (scanned without --exif) don't get the EXIF block —
-    every match is 'weak' and the summary stays silent. Avoids cluttering
-    the existing audit output for the internal path."""
+    every match is 'weak' and the summary stays silent. Keeps the audit
+    output clean for the common no-EXIF path."""
     src = tmp_path / "src"
     dst = tmp_path / "dst"
     _make_tree(src, {"a.jpg": b"hello world"})

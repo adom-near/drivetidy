@@ -3,7 +3,7 @@
 
 """`drivetidy hash` — compute fingerprints for size-collision candidates.
 
-Per internal notes:
+Design notes:
   - default algorithm: xxh64 (5-10x faster than md5; collision odds for
     dedup at this scale are <10^-15)
   - --sample-head N: only hash the first N bytes of files larger than N;
@@ -37,7 +37,7 @@ from typing import Iterable
 from . import db as dbmod, drive_info
 
 
-# Streaming chunk size for hash. 8 MB matches internal notes §2.5.
+# Streaming chunk size for hash. 8 MB balances memory vs syscall overhead.
 CHUNK = 8 * 1024 * 1024
 
 

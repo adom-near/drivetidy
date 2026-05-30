@@ -4,8 +4,7 @@
 """HTML report generation.
 
 Self-contained, no external assets. Uses str.format_map for placeholder
-substitution (no jinja dep). Per internal notes, the report style sticks to
-the orange palette established in WT's earlier reports.
+substitution (no jinja dep). Style: warm-orange palette for readability.
 """
 
 from __future__ import annotations

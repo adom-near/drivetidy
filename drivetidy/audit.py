@@ -282,7 +282,7 @@ def _iter_live_signatures(
     (._*, .DS_Store, etc.) to match scan_backend behavior.
 
     Single-threaded by design: HDD walk parallelism is anti-optimal
-    (internal notes §3.1). Caller can launch a thread per drive.
+    (head-thrash). Caller can launch a thread per drive instead.
     """
     root = os.path.abspath(root)
     skip_active = src_real is not None or src_dev_ino is not None

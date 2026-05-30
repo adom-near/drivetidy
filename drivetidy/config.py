@@ -17,7 +17,7 @@ from pathlib import Path
 DEFAULT_DB_DIR = Path.home() / ".drivetidy"
 DEFAULT_DB_FILE = DEFAULT_DB_DIR / "drivetidy.db"
 
-# macOS metadata that we never want to track (see internal notes §F).
+# OS-generated metadata files that we never want to track as user content.
 MACOS_EXCLUDE_NAMES = frozenset({
     ".DS_Store",
     ".localized",

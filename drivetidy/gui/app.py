@@ -250,7 +250,7 @@ def create_app(
 
     @app.get("/api/state")
     def get_state():
-        return {"state": "ACTIVE", "days_remaining": 0, "internal": False}
+        return {"state": "ACTIVE"}
 
     @app.post("/api/pick-folder")
     def pick_folder():
