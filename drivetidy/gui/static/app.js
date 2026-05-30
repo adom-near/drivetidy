@@ -127,12 +127,7 @@ async function runAudit(ev) {
     renderResult(r);
     setStatus('完成', 'success');
   } catch (e) {
-    if (/^402\b/.test(e.message)) {
-      setStatus('試用已結束', 'error');
-      showTrialModal();
-    } else {
-      setStatus('稽核失敗：' + e.message, 'error');
-    }
+    setStatus('稽核失敗：' + e.message, 'error');
   } finally {
     btn.disabled = false;
   }

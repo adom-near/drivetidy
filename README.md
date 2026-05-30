@@ -22,7 +22,7 @@ Now I run it before I format any card. If you've ever hesitated before a "format
 
 ## What it does
 
-- **Fast**: 113 seconds to verify a 5TB drive (early-stop search; full walk would take 2 hours)
+- **Fast**: ~113 s to verify a 5 TB HDD (M1 MacBook Air, USB-C, ~2 M source files, early-stop search; full walk on the same drive takes ~2 h). Your numbers will vary with drive type, file count, and how many files are actually missing.
 - **Probabilistic match with evidence**: filename + size + mtime, with optional EXIF disambiguation for JPEGs
 - **HTML report**: missing files grouped by folder, sorted by size, so you fix the biggest gaps first
 - **One-click backup of what's missing** (`drivetidy backup-missing`): rsync the gap, additive only — never deletes
@@ -62,8 +62,9 @@ drivetidy scan /Volumes/Backup-2 --label backup-2
 #    --out also writes an HTML report grouping missing files by folder.
 drivetidy audit sd-source --against backup-1,backup-2 --out missing.html
 
-# 3. (Optional) Copy the missing files to a backup — additive, never deletes
-drivetidy backup-missing <audit_run_id> --dest-ident backup-1 --apply
+# 3. (Optional) Copy the missing files to a backup — additive, never deletes.
+#    The audit run id (e.g. #5) is printed at the end of step 2.
+drivetidy backup-missing 5 --dest-ident backup-1 --apply
 ```
 
 ## License
@@ -101,7 +102,7 @@ DriveTidy 掃描你的來源硬碟，用「檔名 + 大小 + 修改時間」（J
 
 ### 它做什麼
 
-- **快**：113 秒驗完 5TB（早停搜尋；完整 walk 要 2 小時）
+- **快**：~113 秒驗完 5TB HDD（M1 MacBook Air、USB-C、~200 萬筆檔案、早停搜尋；完整 walk 同一顆要 ~2 小時）。實際速度看你的硬碟類型、檔案數量、跟漏多少檔。
 - **多重比對 + 證據**：檔名 + 大小 + 修改時間，JPEG 可選用 EXIF 加強判定
 - **HTML 報告**：缺檔案依資料夾分組、依大小排序，先補最大的洞
 - **一鍵補檔**（`drivetidy backup-missing`）：rsync 缺的檔，只新增不刪除
@@ -141,7 +142,8 @@ drivetidy scan /Volumes/備份-2 --label backup-2
 drivetidy audit sd-source --against backup-1,backup-2 --out 缺檔報告.html
 
 # 3. （選用）把缺的檔複製到某顆備份（只新增不刪除）
-drivetidy backup-missing <audit_run_id> --dest-ident backup-1 --apply
+#    audit 結束會印出 run id（譬如 #5），下面用那個 id
+drivetidy backup-missing 5 --dest-ident backup-1 --apply
 ```
 
 ### 授權

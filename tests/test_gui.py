@@ -340,8 +340,8 @@ def test_pick_free_port_avoids_in_use():
 
 def test_scan_rejects_path_outside_allowlist(tmp_path, monkeypatch):
     """`/api/scan` must reject paths not under /Volumes/* or a non-hidden
-    home subdir, even when the trial is healthy. Defence-in-depth: a
-    DNS-rebound or XSRF'd request shouldn't be able to enumerate /etc."""
+    home subdir. Defence-in-depth: a DNS-rebound or XSRF'd request
+    shouldn't be able to enumerate /etc."""
     # Drop the test-mode override so we see real prod behaviour.
     monkeypatch.delenv("DRIVETIDY_SCAN_EXTRA_ROOTS", raising=False)
 

@@ -121,12 +121,9 @@ def build_parser() -> argparse.ArgumentParser:
              "relative path (re.search), that file is skipped.",
     )
     s_aud.add_argument(
-        "--require-hash", action="store_true",
-        help="(reserved) Use hash to confirm matches; not implemented in A1",
-    )
-    s_aud.add_argument(
         "--out", default=None,
-        help="(reserved) Write HTML report to PATH; A4 will implement",
+        help="Write the HTML report to PATH. Groups missing files by source "
+             "folder and sorts by size, biggest first.",
     )
 
     # backup-missing — close the audit loop. Copies an audit's missing
@@ -335,12 +332,6 @@ def cmd_audit(args: argparse.Namespace) -> int:
     from . import audit as audit_mod, report as report_mod
     from .utils import parse_size
 
-    if args.require_hash:
-        print(
-            "warning: --require-hash is reserved for a future release; ignoring",
-            file=sys.stderr,
-        )
-
     dest_idents = [s.strip() for s in args.against.split(",") if s.strip()]
     result = audit_mod.run_audit(
         args.source,
@@ -382,8 +373,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "backup-missing":
         return cmd_backup_missing(args)
 
-    print(f"drivetidy {args.cmd}: not implemented yet (skeleton)")
-    return 0
+    parser.print_help()
+    return 2
 
 
 if __name__ == "__main__":

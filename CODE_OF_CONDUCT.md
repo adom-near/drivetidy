@@ -9,4 +9,4 @@ DriveTidy is a small open-source project. The rules are simple:
 
 Violations: I'll ask you once to stop. If it continues, you'll be blocked from the repo.
 
-Report problems by opening a private issue or emailing the maintainer (see `pyproject.toml`).
+Report problems by opening a [private security advisory](https://github.com/adom-near/drivetidy/security/advisories/new) on the repo. Maintainers will respond there.

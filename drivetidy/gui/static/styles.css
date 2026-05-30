@@ -86,10 +86,6 @@ footer { text-align: center; color: #aaa; font-size: 0.8em; padding: 1em; }
 footer a { color: #d35400; text-decoration: none; }
 footer a:hover { text-decoration: underline; }
 
-body.read-only #audit-form input,
-body.read-only #audit-form button[type=submit] { opacity: 0.5; pointer-events: none; }
-body.read-only::before { content: "唯讀模式（試用已結束，僅可瀏覽歷史）"; display: block; background: #fff3e0; color: #b34800; text-align: center; padding: 0.4em; font-size: 0.85em; border-bottom: 1px solid #ffe0b2; }
-
 /* EXIF evidence panel — surfaces match-quality without ever changing
  * the matched/missing counts. Colours track the existing palette:
  * orange (success/strong), grey (neutral/weak), red (warning/conflict).

@@ -158,7 +158,10 @@ def create_app(
     @app.get("/", response_class=HTMLResponse)
     def index():
         # Read on every request — small file, supports hot-reload in dev.
-        return HTMLResponse(_INDEX_PATH.read_text(encoding="utf-8"))
+        from .. import __version__
+        return HTMLResponse(
+            _INDEX_PATH.read_text(encoding="utf-8").replace("{{version}}", __version__)
+        )
 
     @app.get("/api/drives")
     def list_drives():

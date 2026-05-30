@@ -694,6 +694,9 @@ def _persist_audit(
     run_id = cur.lastrowid
 
     if result.missing_paths:
+        # conn is opened with isolation_level=None (autocommit) — the
+        # explicit BEGIN/COMMIT here wraps the bulk insert into one
+        # transaction so a crash mid-batch leaves no partial rows.
         conn.execute("BEGIN")
         try:
             conn.executemany(
@@ -819,8 +822,7 @@ def run_audit_sql(
 def _print_report(r: AuditResult, *, out) -> None:
     """Human-readable summary, written to `out` (default stderr).
 
-    Stdout is reserved for a future --json mode (matches scan.py convention
-    established in commit b499815).
+    Stdout is reserved for a future --json mode (matches scan.py convention).
     """
     pct = (100.0 * r.matched / r.total_source_files) if r.total_source_files else 0.0
     # Mark live-walked targets so the user can tell which side hit a real disk.
