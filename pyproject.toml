@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "drivetidy"
-version = "1.0.0"
+version = "1.0.1"
 description = "Backup integrity audit: verify your photos and videos are actually backed up"
 readme = "README.md"
 requires-python = ">=3.11"
