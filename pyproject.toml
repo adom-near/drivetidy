@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "drivetidy"
-version = "1.0.1"
+version = "1.0.2"
 description = "Backup integrity audit: verify your photos and videos are actually backed up"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "GPL-3.0-or-later"
 license-files = ["LICENSE"]
-authors = [{ name = "wt" }]
+authors = [{ name = "adom-near" }]
 keywords = ["backup", "audit", "verification", "photography", "data-integrity"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -47,3 +47,7 @@ drivetidy = "drivetidy.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["drivetidy*"]
+
+[tool.setuptools.package-data]
+"drivetidy" = ["templates/*.html"]
+"drivetidy.gui" = ["templates/*.html", "static/*.css", "static/*.js"]
