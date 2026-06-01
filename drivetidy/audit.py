@@ -6,9 +6,10 @@
 Question answered: "every file under <source>, is it backed up on at least
 one of <dest1...destN>? if not, which ones?"
 
-Comparison key: `(basename_lower, size)`. No hashing — see
-docs/internal design doc §核心邏輯 for why this is acceptable for
-photo / video workflows (~99.9% accuracy).
+Comparison key: `(basename_lower, size)`. No hashing — for photo / video
+workflows where every file has a unique camera-generated name and the
+file size doubles as a content fingerprint, this is accurate enough
+in practice (~99.9%) and orders of magnitude faster than full hashing.
 
 This module implements the SQL mode (Phase 2 A1). Both source and all
 dests must already have a finished `drivetidy scan`. Live-walk mode for
@@ -420,8 +421,8 @@ def run_audit(
 
     early_stop: when True (default), live-walked destinations are walked
     only until every source needle has been found in some destination
-    (across the full union). Per docs/internal design doc §核心邏輯.2,
-    this is the difference between 113 s and >2 h on a 5 TB HDD audit.
+    (across the full union). This is the difference between 113 s and
+    >2 h on a 5 TB HDD audit.
 
     mtime_match: when True (default), the comparison key includes
     int(st.st_mtime), and each source file's match window covers
